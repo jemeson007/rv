@@ -1,10 +1,11 @@
-import express, { Router } from "express";
+import express, { json, urlencoded } from "express";
 import productRoutes from './products/index';
 
 const port = 3333;
 const app = express();
 
-const router = Router();
+app.use(urlencoded({extended: false}));
+app.use(json());
 
 app.get('/', (req, res) => {
     res.send("H, ..W")
