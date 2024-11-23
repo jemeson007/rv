@@ -1,7 +1,9 @@
 import { eq } from "drizzle-orm";
 import { Request, Response } from "express";
-import { db } from "../db/index";
-import { productsTable } from "../db/schema";
+import { db } from "../../db/index";
+import { productsTable, createProductSchema } from "../../db/schema";
+import _, { create } from 'lodash';
+// import { createProductSchema } from "./index";
 
 export async function listProducts(req:Request, res:Response){
     try{
@@ -28,10 +30,12 @@ export async function getProductsById(req:Request, res:Response){
     }
     // res.send("aL");
 }
-export async function createProducts(req:Request, res:Response){
-    // console.log(req.body);
+export async function createProducts(req: Request, res: Response){
+    // console.log(req.body);['name', 'price']
+    
+    // const data = _.pick(req.body, Object.keys(createProductSchema.shape));
     try{
-      const [product] = await db.insert(productsTable).values(req.body).returning();
+      const [product] = await db.insert(productsTable).values(req.cleanBody).returning();
       res.status(201).json(product); 
     }catch(e){
         res.status(500).send(e);
@@ -44,7 +48,8 @@ export async function createProducts(req:Request, res:Response){
 export async function updateProducts(req:Request, res:Response){
     try{
         const id = Number(req.params.id);
-        const updFields = req.body;
+        // const updFields = req.body;
+        const updFields = req.cleanBody;
         const [updProd] = await db.update(productsTable).set(updFields).where(eq(productsTable.id, id)).returning();
 
         if(updProd){

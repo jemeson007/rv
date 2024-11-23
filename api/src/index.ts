@@ -1,5 +1,5 @@
 import express, { json, urlencoded } from "express";
-import productRoutes from './products/index';
+import productRoutes from './routes/products/index';
 
 const port = 3333;
 const app = express();
